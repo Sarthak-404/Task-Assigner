@@ -11,10 +11,24 @@ import json
 
 load_dotenv()
 
-firebase_credentials = json.loads(os.getenv("FIREBASE_CREDENTIALS"))
-cred = credentials.Certificate(firebase_credentials)
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
+if firebase_credentials_json:
+    # Convert the string to a dictionary
+    firebase_credentials = json.loads(firebase_credentials_json)
+
+    # Write credentials to a temporary JSON file
+    temp_credentials_path = "/tmp/firebase_credentials.json"
+    with open(temp_credentials_path, "w") as f:
+        json.dump(firebase_credentials, f)
+
+    # Load credentials from the file
+    cred = credentials.Certificate(temp_credentials_path)
+    firebase_admin.initialize_app(cred)
+
+    # Initialize Firestore
+    db = firestore.client()
+else:
+    raise ValueError("FIREBASE_CREDENTIALS environment variable is missing!")
 
 app = Flask(__name__)
 CORS(app)
