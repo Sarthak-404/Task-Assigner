@@ -12,6 +12,7 @@ import json
 load_dotenv()
 
 firebase_credentials_json = os.getenv("FIREBASE_CREDENTIALS")
+print(firebase_credentials_json)  # Add this for debugging
 if firebase_credentials_json:
     # Convert the string to a dictionary
     firebase_credentials = json.loads(firebase_credentials_json)
