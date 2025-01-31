@@ -12,7 +12,7 @@ import json
 load_dotenv()
 
 firebase_credentials = json.loads(os.getenv("FIREBASE_CREDENTIALS"))
-cred = credentials.Certificate("firebase-adminsdk.json")
+cred = credentials.Certificate(firebase_credentials)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
