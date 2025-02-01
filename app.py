@@ -41,29 +41,6 @@ llm = ChatGroq(groq_api_key=groq_api_key, model_name="Llama3-8b-8192")
 def home():
     return "Welcome to the Finance Recommendation API!"
 
-@app.route("/get_quiz_data/<userId>", methods=["GET"])
-def get_quiz_data(userId):
-    try:
-        user_ref = db.collection("Users").document(userId).collection("quizzes").document("latestQuiz")
-        doc = user_ref.get()
-
-        if not doc.exists:
-            return jsonify({"error": "No quiz data found for this user"}), 404
-
-        quiz_data = doc.to_dict()
-        questions = quiz_data.get("questions", [])
-        responses = quiz_data.get("responses", {})
-
-        formatted_data = ""
-        for idx, q in enumerate(questions):
-            question_text = q.get("question", "")
-            response_text = responses.get(str(idx), "No response")
-            formatted_data += f"Q{idx+1}: {question_text}\nUser Response: {response_text}\n\n"
-
-        return jsonify({"quiz_data": formatted_data})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 @app.route("/suggest_financial_tasks/<userId>", methods=["GET"])
 def suggest_financial_tasks(userId):
